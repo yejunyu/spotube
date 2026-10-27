@@ -1,0 +1,65 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:spotube_demo/data/track_repository.dart';
+import 'package:spotube_demo/models/track.dart';
+import 'package:spotube_demo/pages/track_detail_page.dart';
+import 'package:spotube_demo/providers/track_providers.dart';
+
+class HomePage extends ConsumerWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+
+  final _repo = TrackRepository();
+  late final Future<List<Track>> _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = _repo.fetchTracks();
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final asyncTracks = ref.watch(trackListProvider);
+    return Scaffold(
+      appBar: AppBar(title: const Text('我的曲库')),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await ref.refresh(trackListProvider);
+        },
+        child: asyncTracks.when(
+          skipLoadingOnRefresh: true,
+          data: (tracks) {
+            if (tracks.isEmpty) {
+              return const Center(child: Text('empty'));
+            }
+            return ListView.builder(
+              itemCount: tracks.length,
+              itemBuilder: (context, i) {
+                final t = tracks[i];
+                return ListTile(
+                  title: Text(t.title),
+                  subtitle: Text('${t.artist} - ${_fmt(t.durationMs)}'),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => TrackDetailPage(track: t),
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+          error: (e, _) => Center(child: Text('加载失败：$e')),
+          loading: () => const Center(child: CircularProgressIndicator()),
+        ),
+      ),
+    );
+  }
+
+  String _fmt(int durationMs) {
+    final d = Duration(milliseconds: durationMs);
+    return '${d.inMinutes}:${(d.inSeconds % 60).toString().padLeft(2, '0')}';
+  }
+}
