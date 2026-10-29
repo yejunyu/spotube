@@ -3,6 +3,7 @@ class Track {
   final String title;
   final String artist;
   final int durationMs;
+  final String audio;
   final String? albumArt;
   final String? lyric;
 
@@ -13,6 +14,7 @@ class Track {
     required this.durationMs,
     this.albumArt,
     this.lyric,
+    required this.audio,
   });
 
   factory Track.fromJson(Map<String, dynamic> json) => Track(
@@ -22,5 +24,6 @@ class Track {
     durationMs: json['durationMs'] as int,
     albumArt: json['albumArt'] as String?,
     lyric: json['lyric'] as String?,
+    audio: json['audio'] as String,
   );
 }

@@ -77,19 +77,30 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                     itemCount: filtered.length,
                     itemBuilder: (context, i) {
                       final t = filtered[i];
-                      final isFav = ref.watch(favoritesProvider).contains(t.id);
+                      final favIds =
+                          ref.watch(favoritesProvider).value ?? <String>{};
+                      final isFav = favIds.contains(t.id);
                       return ListTile(
                         title: Text(t.title),
                         subtitle: Text(t.artist),
                         trailing: IconButton(
-                          onPressed: () =>
-                              ref.read(favoritesProvider.notifier).toggle(t.id),
+                          onPressed: () async {
+                            final favIds =
+                                ref.read(favoritesProvider).value ?? <String>{};
+                            final ctrl = ref.read(favoritesControllerProvider);
+                            if (favIds.contains(t.id)) {
+                              await ctrl.remove(t.id);
+                            } else {
+                              await ctrl.add(t.id);
+                            }
+                          },
                           icon: Icon(
                             isFav ? Icons.favorite : Icons.favorite_border,
                           ),
                         ),
                         onTap: () =>
-                            context.router.push(TrackDetailRoute(track: t)),
+                            context.router.root
+                                .push(TrackDetailRoute(track: t)),
                       );
                     },
                   );

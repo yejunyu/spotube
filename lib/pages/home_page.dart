@@ -27,13 +27,22 @@ class HomePage extends ConsumerWidget {
               itemCount: tracks.length,
               itemBuilder: (context, i) {
                 final t = tracks[i];
-                final isFav = ref.watch(favoritesProvider).contains(t.id);
+                final favIds = ref.watch(favoritesProvider).value ?? <String>{};
+                final isFav = favIds.contains(t.id);
                 return ListTile(
                   title: Text(t.title),
                   subtitle: Text('${t.artist} - ${_fmt(t.durationMs)}'),
                   trailing: IconButton(
-                    onPressed: () =>
-                        ref.read(favoritesProvider.notifier).toggle(t.id),
+                    onPressed: () async {
+                      final favIds =
+                          ref.read(favoritesProvider).value ?? <String>{};
+                      final ctrl = ref.read(favoritesControllerProvider);
+                      if (favIds.contains(t.id)) {
+                        await ctrl.remove(t.id);
+                      } else {
+                        await ctrl.add(t.id);
+                      }
+                    },
                     icon: Icon(isFav ? Icons.favorite : Icons.favorite_border),
                   ),
                   // onTap: () => Navigator.of(context).push(
@@ -41,7 +50,8 @@ class HomePage extends ConsumerWidget {
                   //     builder: (_) => TrackDetailPage(track: t),
                   //   ),
                   // ),
-                  onTap: () => context.router.push(TrackDetailRoute(track: t)),
+                  onTap: () =>
+                      context.router.root.push(TrackDetailRoute(track: t)),
                 );
               },
             );

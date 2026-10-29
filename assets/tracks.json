@@ -1,29 +1,23 @@
 [
   {
     "id": "t1",
-    "title": "晴天",
-    "artist": "周杰伦",
-    "durationMs": 269000,
-    "lyric": "故事的小黄花"
+    "title": "差不多先生",
+    "artist": "MC HotDog 热狗",
+    "durationMs": 298000,
+    "audio": "assets/audio/MC HotDog 热狗 - 差不多先生.mp3"
   },
   {
     "id": "t2",
-    "title": "Sky",
-    "artist": "Someone",
-    "durationMs": 180000,
-    "albumArt": "sky.jpg"
+    "title": "光年之外",
+    "artist": "邓紫棋",
+    "durationMs": 235000,
+    "audio": "assets/audio/邓紫棋 - 光年之外.mp3"
   },
   {
     "id": "t3",
-    "title": "夜曲",
-    "artist": "周杰伦",
-    "durationMs": 223000
-  },
-  {
-    "id": "t4",
-    "title": "Untitled",
-    "artist": "Unknown",
-    "durationMs": 150000,
-    "lyric": "纯音乐无词"
+    "title": "唯一（LIVE现场版）",
+    "artist": "邓紫棋",
+    "durationMs": 260000,
+    "audio": "assets/audio/邓紫棋 - 唯一（LIVE现场版）.mp3"
   }
 ]
